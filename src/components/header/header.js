@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Match, Link } from '@reach/router'
+import { Match, Link, navigate } from '@reach/router'
 
 import { Container, Responsive, Menu } from 'semantic-ui-react'
 import './header.module.scss'
