@@ -1,4 +1,12 @@
-const path = require('path')
+import path from 'path'
+import browserEnvVars from 'browser-env-vars'
+
+browserEnvVars.generate({
+  readFile: `.env.${process.env.NODE_ENV || 'development'}`,
+  outFile: './src/env.js',
+  esm: true,
+  whiltelist: ['API_URL']
+})
 
 export default pluginOptions => ({
   webpack: (currentWebpackConfig, state) => {
