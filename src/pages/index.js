@@ -1,7 +1,13 @@
 import React from 'react'
+import { Segment } from 'semantic-ui-react'
+import { Head } from 'react-static'
 
-export default () => (
-  <div style={{ textAlign: 'center' }}>
-    <h1>Welcome to React-Static</h1>
+const IndexPage = (props) => (
+  <div>
+    <Head title='Home' />
+    <Segment basic>
+    </Segment>
   </div>
 )
+
+export default IndexPage

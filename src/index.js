@@ -5,6 +5,7 @@ import { AppContainer } from 'react-hot-loader'
 
 // Your top level component
 import App from './app'
+import './styles/global.scss'
 
 // Export your top level component as JSX (for static rendering)
 export default App

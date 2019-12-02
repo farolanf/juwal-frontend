@@ -18,6 +18,16 @@ const plugins = [{
         hooks: {}
       },
 {
+        location: "/home/farolan/prj/juwal/juwal-frontend/node_modules/react-static-plugin-typescript",
+        plugins: [],
+        hooks: {}
+      },
+{
+        location: "/home/farolan/prj/juwal/juwal-frontend/node_modules/react-static-plugin-sass",
+        plugins: [],
+        hooks: {}
+      },
+{
         location: "/home/farolan/prj/juwal/juwal-frontend",
         plugins: [],
         hooks: {}

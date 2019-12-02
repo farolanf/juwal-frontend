@@ -1,0 +1,14 @@
+.messages {
+  position: fixed;
+  top: 0;
+  right: 0;
+  min-width: 380px;
+  max-height: 100vh;
+  overflow: auto;
+  padding: 16px;
+  pointer-events: none;
+
+  .message {
+    pointer-events: all;
+  }
+}
