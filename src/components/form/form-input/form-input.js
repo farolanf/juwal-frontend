@@ -1,8 +1,8 @@
 import React from 'react'
 import { useField } from 'formik'
-import { Form, Label, Header } from 'semantic-ui-react'
 
-import './FormInput.module.scss'
+import { Form, Label, Header } from 'semantic-ui-react'
+import './form-input.module.scss'
 
 const FormInput = ({ id, name, label, required, control: Component = 'input', rightHelp, help, ...props }) => {
   const [field, meta] = useField(name)

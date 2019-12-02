@@ -1,11 +1,9 @@
 import React from 'react'
 import { Root, Routes, addPrefetchExcludes } from 'react-static'
+import { Router } from '@reach/router'
 
 import { Container, Segment } from 'semantic-ui-react'
-import { Link, Router } from '~components/router'
-import Dynamic from 'containers/Dynamic'
 import Header from '~components/header'
-
 import 'semantic-ui-css/semantic.min.css'
 
 // Any routes that start with 'dynamic' will be treated as non-static routes
@@ -19,7 +17,6 @@ function App() {
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>
-              <Dynamic path="dynamic" />
               <Routes path="*" />
             </Router>
           </React.Suspense>

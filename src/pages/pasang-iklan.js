@@ -1,9 +1,11 @@
 import React from 'react'
+import { Head } from 'react-static'
 import { navigate } from '@reach/router'
 import _ from 'lodash'
 
 import { Segment, Header } from 'semantic-ui-react'
 import EditAdBody from '~components/body/edit-ad-body'
+
 import { addProduct, uploadImage } from '~api/products'
 import { blobsFromDataUrls } from '~libs/doms'
 import { createUploadFormData } from '~libs/helpers'
@@ -30,8 +32,8 @@ const NewAdPage = () => {
   }
 
   return (
-    <Layout>
-      <SEO title='Pasang Iklan' />
+    <>
+      <Head title='Pasang Iklan' />
       <Segment vertical>
         <Header as='h1'>Pasang Iklan</Header>
         <EditAdBody onSubmit={handleSubmit} data={{
@@ -42,7 +44,7 @@ const NewAdPage = () => {
           }}
         />
       </Segment>
-    </Layout>
+    </>
   )
 }
 
