@@ -2,7 +2,7 @@ import React from 'react'
 import { Root, Routes, addPrefetchExcludes } from 'react-static'
 
 import { Container, Segment } from 'semantic-ui-react'
-import { Link, Router } from 'components/Router'
+import { Link, Router } from '~components/router'
 import Dynamic from 'containers/Dynamic'
 
 // Any routes that start with 'dynamic' will be treated as non-static routes
