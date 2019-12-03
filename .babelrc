@@ -1,12 +1,13 @@
 {
   "presets": ["react-static/babel-preset.js"],
   "plugins": [
-    ["babel-plugin-react-css-modules", {
+    ["react-css-modules", {
       "filetypes": {
         ".scss": {
           "syntax": "postcss-scss"
         }
-      }
+      },
+      "handleMissingStyleName": "warn"
     }]
   ]
 }
