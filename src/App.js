@@ -4,6 +4,7 @@ import { Router } from '@reach/router'
 
 import { Container, Segment } from 'semantic-ui-react'
 import Header from '~components/header'
+import Messages from '~components/messages'
 import 'semantic-ui-css/semantic.min.css'
 
 // Any routes that start with 'dynamic' will be treated as non-static routes
@@ -26,6 +27,7 @@ function App() {
             Copyright {new Date().getFullYear()} Juwal
           </Segment>
         </footer>
+        <Messages />
       </Container>
     </Root>
   )
