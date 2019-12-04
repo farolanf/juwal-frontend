@@ -17,6 +17,7 @@ const priceMin = 0
 const maxImages = MAX_AD_IMAGES
 
 const adSchema = yup.object().shape({
+  category: yup.string().required().label('Kategori'),
   title: yup.string().max(titleMaxLen).required().label('Judul iklan'),
   description: yup.string().max(descMaxLen).required().label('Deskripsi iklan'),
   price: yup.number().min(priceMin).required().label('Harga'),
@@ -116,6 +117,7 @@ const EditAdBody = ({ data, onSubmit }) => {
         <Form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
           <Form.Field>
             <label>Kategori</label>
+            <input type="hidden" name="category" />
             <Menu secondary>
               <Dropdown item text={(selectedCategory || {}).name || 'Pilih kategori'}>
                 <Dropdown.Menu>
@@ -123,7 +125,9 @@ const EditAdBody = ({ data, onSubmit }) => {
                 </Dropdown.Menu>
               </Dropdown>
             </Menu>
-            <input type="hidden" name="category" />
+            {formik.errors.category && (
+              <Label pointing color='red' styleName='category-help'>{formik.errors.category}</Label>
+            )}
           </Form.Field>
 
           <FormInput id='title' name='title' label='Judul iklan' maxLength={titleMaxLen} required help='Sebutkan fitur utama barang atau jasa yang dijual' rightHelp={`${formik.values.title.length}/${titleMaxLen}`} />

@@ -37,6 +37,7 @@ const NewAdPage = () => {
       <Segment vertical>
         <Header as='h1'>Pasang Iklan</Header>
         <EditAdBody onSubmit={handleSubmit} data={{
+            category: '',
             title: '',
             description: '',
             price: 0,
