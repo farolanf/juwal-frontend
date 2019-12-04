@@ -7,7 +7,8 @@
           "syntax": "postcss-scss"
         }
       },
-      "handleMissingStyleName": "warn"
+      "handleMissingStyleName": "warn",
+      "context": "."
     }]
   ]
 }
