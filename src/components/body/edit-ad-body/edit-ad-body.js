@@ -6,10 +6,11 @@ import { Formik, useFormikContext } from 'formik'
 
 import { Segment, Form, Button, Icon, Grid, Image, Label, Menu, Dropdown } from 'semantic-ui-react'
 import FormInput from '~components/form/form-input'
-import './edit-ad-body.module.scss'
 
 import { MAX_AD_IMAGES } from '~constants'
 import useGlobal from '~store'
+
+import './edit-ad-body.module.scss'
 
 const titleMaxLen = 70
 const descMaxLen = 4000
