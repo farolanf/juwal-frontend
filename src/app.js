@@ -12,8 +12,8 @@ import useGlobal from '~store'
 import { getToken } from '~libs/auth'
 
 addPrefetchExcludes([
+  /item\/.+/i,
   /iklan-saya\/.+/i,
-  /item\/.+/i
 ])
 
 function App() {
@@ -32,8 +32,8 @@ function App() {
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>
-              <IklanSayaPage path='iklan-saya/*' />
               <ItemPage path='item/*' />
+              <IklanSayaPage path='iklan-saya/*' />
               <Routes path="*" />
             </Router>
           </React.Suspense>

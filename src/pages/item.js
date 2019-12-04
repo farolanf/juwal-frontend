@@ -14,9 +14,12 @@ const DetailPage = ({ id }) => {
   const [{ title, description, price, images } = {}, setProduct] = useState()
 
   useEffect(() => {
+    let canceled
     (async function () {
-      setProduct(await getProduct(id).then(res => res.data))
+      const product = await getProduct(id).then(res => res.data)
+      !canceled && setProduct(product)
     })()
+    return () => canceled = true
   }, [id])
 
   const renderCarousel = () => {

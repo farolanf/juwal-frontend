@@ -75,10 +75,12 @@ const EditPage = ({ id }) => {
   }
 
   useEffect(() => {
+    let canceled
     (async function () {
       const product = await getProduct(id).then(res => res.data)
-      setProduct(prepareProduct(product))
+      !canceled && setProduct(prepareProduct(product))
     })()
+    return () => canceled = true
   }, [id])
 
   const handleSubmit = async (values, { setSubmitting }) => {
