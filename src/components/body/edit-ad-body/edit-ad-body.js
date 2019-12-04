@@ -100,6 +100,7 @@ const EditAdBody = ({ data, onSubmit }) => {
     category.categories ? (
       <Dropdown key={category.id} item text={category.name}>
         <Dropdown.Menu>
+          <Dropdown.Item text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
           {category.categories.map(child => renderCategoryMenu(child, formik))}
         </Dropdown.Menu>
       </Dropdown>
