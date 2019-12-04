@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import * as yup from 'yup'
@@ -83,10 +83,16 @@ const ImageUploadField = ({ id, name, index, ...props }) => {
 
 const EditAdBody = ({ data, onSubmit }) => {
   const [productsCategory, actions] = useGlobal(state => state.categories.Products)
+  const [selectedCategory, setSelectedCategory] = useState()
 
   useEffect(() => {
     actions.category.getCategory('Products')
   }, [actions])
+
+  const handleCategoryItemClick = (category, formik) => {
+    setSelectedCategory(category)
+    formik.setFieldValue('category', category.id)
+  }
 
   const renderCategoryMenu = (category, formik) => (
     category.categories ? (
@@ -96,7 +102,7 @@ const EditAdBody = ({ data, onSubmit }) => {
         </Dropdown.Menu>
       </Dropdown>
     ) : (
-      <Dropdown.Item key={category.id} text={category.name} active={formik.values.category === category.id} onClick={() => formik.setFieldValue('category', category.id)} />
+      <Dropdown.Item key={category.id} text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
     )
   )
 
@@ -111,7 +117,7 @@ const EditAdBody = ({ data, onSubmit }) => {
           <Form.Field>
             <label>Kategori</label>
             <Menu secondary>
-              <Dropdown item text='Pilih kategori'>
+              <Dropdown item text={(selectedCategory || {}).name || 'Pilih kategori'}>
                 <Dropdown.Menu>
                   {productsCategory && productsCategory.categories.map(category => renderCategoryMenu(category, formik))}
                 </Dropdown.Menu>
