@@ -6,6 +6,7 @@ import { Container, Segment } from 'semantic-ui-react'
 import Header from '~components/header'
 import Messages from '~components/messages'
 import IklanSayaPage from '~src/pages/iklan-saya'
+import ItemPage from '~src/pages/item'
 import 'semantic-ui-css/semantic.min.css'
 
 import useGlobal from '~store'
@@ -33,6 +34,7 @@ function App() {
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>
               <IklanSayaPage path='iklan-saya/*' />
+              <ItemPage path='item/*' />
               <Routes path="*" />
             </Router>
           </React.Suspense>
