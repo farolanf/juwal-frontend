@@ -1,16 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Root, Routes, addPrefetchExcludes } from 'react-static'
 import { Router } from '@reach/router'
 
 import { Container, Segment } from 'semantic-ui-react'
 import Header from '~components/header'
 import Messages from '~components/messages'
+import IklanSayaPage from '~src/pages/iklan-saya'
 import 'semantic-ui-css/semantic.min.css'
 
-// Any routes that start with 'dynamic' will be treated as non-static routes
-addPrefetchExcludes(['dynamic'])
+import useGlobal from '~store'
+import { getToken } from '~libs/auth'
+
+addPrefetchExcludes([
+  /iklan-saya\/.+/i,
+  /item\/.+/i
+])
 
 function App() {
+  const [, actions] = useGlobal(() => null)
+
+  useEffect(() => {
+    if (getToken()) {
+      actions.auth.getUser()
+    }
+  }, [actions])
+
   return (
     <Root>
       <Header />
@@ -18,6 +32,7 @@ function App() {
         <main>
           <React.Suspense fallback={<em>Loading...</em>}>
             <Router>
+              <IklanSayaPage path='iklan-saya/*' />
               <Routes path="*" />
             </Router>
           </React.Suspense>

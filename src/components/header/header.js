@@ -33,7 +33,6 @@ const MenuItems = () => {
   return (
     <>
       <MenuItem name='Home' as={Link} to='/' />
-      <MenuItem name='Kategori' as={Link} to='/kategori' />
       <MenuItem name='Tentang Kami' as={Link} to='/tentang-kami' />
       <MenuItem name='Pasang Iklan' as={Link} to='/pasang-iklan' />
       {user && (
