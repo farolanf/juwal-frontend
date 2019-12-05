@@ -121,6 +121,20 @@ const EditAdBody = ({ data, onSubmit }) => {
     formik.setFieldValue('productType', opt.value)
   }
 
+  const handleSpecFieldChange = (field, formik) => (e, opt) => {
+    let specFields = formik.values.specFields
+    if (_.isEmpty(specFields)) {
+      const productType = getProductType(formik.values.category, formik.values.productType)
+      specFields = productType.fields.map(field => ({ label: field.label, value: '' }))
+    }
+    formik.setFieldValue('specFields', specFields.map(sf => {
+      if (sf.label === field.label) {
+        sf.value = opt.value
+      }
+      return sf
+    }))
+  }
+
   const renderCategoryMenu = (category, formik) => (
     category.categories ? (
       <Dropdown key={category.id} item text={category.name}>
@@ -171,7 +185,7 @@ const EditAdBody = ({ data, onSubmit }) => {
                     <Dropdown search selection options={field.options.value.map(value => ({
                       value,
                       text: value
-                    }))} />
+                    }))} value={_.get(_.get(formik.values.specFields, { label: field.label }), 'value')} onChange={handleSpecFieldChange(field, formik)} />
                   </Form.Field>
                 ))}
               </Segment>

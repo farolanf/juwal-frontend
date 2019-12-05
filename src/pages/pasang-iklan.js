@@ -24,7 +24,7 @@ const NewAdPage = () => {
     })
     await uploadImage(null, createUploadFormData(fileMetas))
 
-    const data = _.pick(values, ['title', 'description', 'price'])
+    const data = _.pick(values, ['title', 'description', 'price', 'category', 'productType', 'specFields'])
     await addProduct(data)
 
     setSubmitting(false)
@@ -38,6 +38,8 @@ const NewAdPage = () => {
         <Header as='h1'>Pasang Iklan</Header>
         <EditAdBody onSubmit={handleSubmit} data={{
             category: '',
+            productType: '',
+            specFields: [],
             title: '',
             description: '',
             price: 0,
