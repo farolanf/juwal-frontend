@@ -84,16 +84,41 @@ const ImageUploadField = ({ id, name, index, ...props }) => {
 }
 
 const EditAdBody = ({ data, onSubmit }) => {
-  const [productsCategory, actions] = useGlobal(state => state.categories.Products)
-  const [selectedCategory, setSelectedCategory] = useState()
+  const [{ Products: productsCategory, ProductsNormal: productsCategoryNormal }, actions] = useGlobal(state => state.categories)
 
   useEffect(() => {
     actions.category.getCategory('Products')
   }, [actions])
 
+  const getCategory = id => _.get(productsCategoryNormal, ['entities', 'category', id])
+
+  const getProductType = (categoryId, productTypeId) => {
+    const category = getCategory(categoryId)
+    return category && _.find(category.producttypes, { id: productTypeId })
+  }
+
+  const productTypeOptions = formik => {
+    const category = getCategory(formik.values.category)
+    const options = category
+      ? category.producttypes.map(pt => ({
+        value: pt.id,
+        text: pt.name
+      }))
+      : []
+    options.unshift({
+      value: '',
+      text: '--- Pilih produk ---'
+    })
+    return options
+  }
+
   const handleCategoryItemClick = (category, formik) => {
-    setSelectedCategory(category)
+    formik.setFieldValue('productType', '')
     formik.setFieldValue('category', category.id)
+  }
+
+  const handleProductTypeChange = formik => (e, opt) => {
+    formik.setFieldValue('productType', opt.value)
   }
 
   const renderCategoryMenu = (category, formik) => (
@@ -117,11 +142,10 @@ const EditAdBody = ({ data, onSubmit }) => {
     >
       {formik => (
         <Form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
-          <Form.Field>
+          <Form.Field required>
             <label>Kategori</label>
-            <input type="hidden" name="category" />
-            <Menu secondary>
-              <Dropdown item text={(selectedCategory || {}).name || 'Pilih kategori'}>
+            <Menu secondary styleName='category-picker'>
+              <Dropdown item text={(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}>
                 <Dropdown.Menu>
                   {productsCategory && productsCategory.categories.map(category => renderCategoryMenu(category, formik))}
                 </Dropdown.Menu>
@@ -132,9 +156,31 @@ const EditAdBody = ({ data, onSubmit }) => {
             )}
           </Form.Field>
 
-          <FormInput id='title' name='title' label='Judul iklan' maxLength={titleMaxLen} required help='Sebutkan fitur utama barang atau jasa yang dijual' rightHelp={`${formik.values.title.length}/${titleMaxLen}`} />
+          <Form.Field>
+            <label>Jenis Produk</label>
+            <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} />
+          </Form.Field>
 
-          <FormInput id='description' name='description' label='Deskripsi iklan' maxLength={descMaxLen} required control='textarea' help='Jelaskan barang atau jasa yang dijual' rightHelp={`${formik.values.description.length}/${descMaxLen}`} />
+          {getProductType(formik.values.category, formik.values.productType) && (
+            <Form.Field>
+              <label>Spek</label>
+              <Segment basic>
+                {getProductType(formik.values.category, formik.values.productType).fields.map(field => (
+                  <Form.Field key={field.id}>
+                    <label>{field.label}</label>
+                    <Dropdown search selection options={field.options.value.map(value => ({
+                      value,
+                      text: value
+                    }))} />
+                  </Form.Field>
+                ))}
+              </Segment>
+            </Form.Field>
+          )}
+
+          <FormInput id='title' name='title' label='Judul Iklan' maxLength={titleMaxLen} required help='Sebutkan fitur utama barang atau jasa yang dijual' rightHelp={`${formik.values.title.length}/${titleMaxLen}`} />
+
+          <FormInput id='description' name='description' label='Deskripsi Iklan' maxLength={descMaxLen} required control='textarea' help='Jelaskan barang atau jasa yang dijual' rightHelp={`${formik.values.description.length}/${descMaxLen}`} />
           
           <FormInput id='price' name='price' label='Harga' type='number' min={priceMin} required />
 

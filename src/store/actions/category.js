@@ -1,4 +1,8 @@
+import { normalize, schema } from 'normalizr'
 import * as categoryApi from '~api/category'
+
+const categorySchema = new schema.Entity('category')
+categorySchema.define({ categories: [categorySchema] })
 
 export const getCategory = (store, rootName) => {
   categoryApi.getCategory(rootName)
@@ -6,7 +10,8 @@ export const getCategory = (store, rootName) => {
       store.setState({
         categories: {
           ...store.state.categories,
-          [rootName]: res.data[0]
+          [rootName]: res.data[0],
+          [`${rootName}Normal`]: normalize(res.data[0], categorySchema)
         }
       })
     })
