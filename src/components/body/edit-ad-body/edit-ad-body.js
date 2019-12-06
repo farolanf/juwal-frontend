@@ -185,7 +185,7 @@ const EditAdBody = ({ data, onSubmit }) => {
                     <Dropdown search selection options={field.options.value.map(value => ({
                       value,
                       text: value
-                    }))} value={_.get(_.get(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)} />
+                    }))} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)} />
                   </Form.Field>
                 ))}
               </Segment>
