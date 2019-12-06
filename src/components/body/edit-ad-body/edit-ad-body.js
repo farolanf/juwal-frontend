@@ -114,10 +114,12 @@ const EditAdBody = ({ data, onSubmit }) => {
 
   const handleCategoryItemClick = (category, formik) => {
     formik.setFieldValue('productType', '')
+    formik.setFieldValue('specFields', [])
     formik.setFieldValue('category', category.id)
   }
 
   const handleProductTypeChange = formik => (e, opt) => {
+    formik.setFieldValue('specFields', [])
     formik.setFieldValue('productType', opt.value)
   }
 
