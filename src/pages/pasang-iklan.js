@@ -24,7 +24,7 @@ const NewAdPage = () => {
     })
     await uploadImage(null, createUploadFormData(fileMetas))
 
-    const data = _.pick(values, ['title', 'description', 'price', 'category', 'productType', 'specFields'])
+    const data = _.pick(values, ['title', 'description', 'price', 'category', 'productType', 'specFields', 'kabupaten'])
     await addProduct(data)
 
     setSubmitting(false)

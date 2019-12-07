@@ -15,6 +15,14 @@
       }
     }
   }
+
+  .field.inline {
+    
+    .ui.label {
+      display: block;
+      width: fit-content;
+    }
+  }
 }
 
 .category-picker {

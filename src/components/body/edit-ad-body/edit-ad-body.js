@@ -19,10 +19,17 @@ const maxImages = MAX_AD_IMAGES
 
 const adSchema = yup.object().shape({
   category: yup.string().required().label('Kategori'),
+  productType: yup.string().label('Jenis produk'),
+  specFields: yup.array().of(yup.object().shape({
+    id: yup.string(),
+    value: yup.mixed()
+  })),
   title: yup.string().max(titleMaxLen).required().label('Judul iklan'),
   description: yup.string().max(descMaxLen).required().label('Deskripsi iklan'),
   price: yup.number().min(priceMin).required().label('Harga'),
-  images: yup.array().min(maxImages).max(maxImages)
+  images: yup.array().min(maxImages).max(maxImages).label('Foto'),
+  provinsi: yup.string().required().label('Provinsi'),
+  kabupaten: yup.string().required().label('Kabupaten')
 })
 
 const getDataUrl = file => {
@@ -99,6 +106,20 @@ const EditAdBody = ({ data, onSubmit }) => {
     return category && _.find(category.producttypes, { id: productTypeId })
   }
 
+  const getFieldOptions = field => {
+    const options = field.options.value.map(value => ({
+      value,
+      text: value
+    }))
+    if (field.newOption) {
+      options.unshift({
+        value: field.newOption,
+        text: field.newOption
+      })
+    }
+    return options
+  }
+
   const getProvinsi = id => {
     if (provinsisNormal && provinsisNormal.entities.provinsi[id]) {
       return provinsisNormal.entities.provinsi[id]
@@ -162,6 +183,10 @@ const EditAdBody = ({ data, onSubmit }) => {
     }))
   }
 
+  const handleAddSpecValue = field => (e, opt) => {
+    field.newOption = opt.value
+  }
+
   const handleProvinsiChange = formik => (e, opt) => {
     formik.setFieldValue('kabupaten', '')
     formik.setFieldValue('provinsi', opt.value)
@@ -177,6 +202,12 @@ const EditAdBody = ({ data, onSubmit }) => {
       </Dropdown>
     ) : (
       <Dropdown.Item key={category.id} text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
+    )
+  )
+
+  const renderFieldError = (formik, field) => (
+    formik.touched[field] && formik.errors[field] && (
+      <Label pointing color='red'>{formik.errors[field]}</Label>
     )
   )
 
@@ -205,7 +236,7 @@ const EditAdBody = ({ data, onSubmit }) => {
           {!_.isEmpty(productTypeOptions(formik)) && (
             <Form.Field>
               <label>Jenis Produk</label>
-              <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} />
+              <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} noResultsMessage='Tidak ada hasil' />
             </Form.Field>
           )}
 
@@ -216,10 +247,7 @@ const EditAdBody = ({ data, onSubmit }) => {
                 {getProductType(formik.values.category, formik.values.productType).fields.map(field => (
                   <Form.Field key={field.id} inline className='field-small'>
                     <label className='inline-label'>{field.label}</label>
-                    <Dropdown search selection options={field.options.value.map(value => ({
-                      value,
-                      text: value
-                    }))} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)} />
+                    <Dropdown search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
                   </Form.Field>
                 ))}
               </Segment>
@@ -255,11 +283,13 @@ const EditAdBody = ({ data, onSubmit }) => {
               <Dropdown search selection options={(provinsis || []).map(provinsi => ({
                 text: provinsi.name,
                 value: provinsi.id
-              }))} value={formik.values.provinsi} onChange={handleProvinsiChange(formik)} />
+              }))} value={formik.values.provinsi} onChange={handleProvinsiChange(formik)} noResultsMessage='Tidak ada hasil' />
+              {renderFieldError(formik, 'provinsi')}
             </Form.Field>
             <Form.Field inline className='field-small'>
               <label className='inline-label'>Kabupaten / Kota</label>
-              <Dropdown search selection options={getKabupatenOptions(formik)} value={formik.values.kabupaten} onChange={(e, opt) => formik.setFieldValue('kabupaten', opt.value)} />
+              <Dropdown search selection options={getKabupatenOptions(formik)} value={formik.values.kabupaten} onChange={(e, opt) => formik.setFieldValue('kabupaten', opt.value)} noResultsMessage='Tidak ada hasil' />
+              {renderFieldError(formik, 'kabupaten')}
             </Form.Field>
           </Form.Field>
 
