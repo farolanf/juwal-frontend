@@ -124,14 +124,16 @@ const EditAdBody = ({ data, onSubmit }) => {
     const category = getCategory(formik.values.category)
     const options = category
       ? category.producttypes.map(pt => ({
-        value: pt.id,
-        text: pt.name
-      }))
+          value: pt.id,
+          text: pt.name
+        }))
       : []
-    options.unshift({
-      value: '',
-      text: '--- Pilih produk ---'
-    })
+    if (options.length) {
+      options.unshift({
+        value: '',
+        text: '--- Pilih produk ---'
+      })      
+    }
     return options
   }
 
@@ -200,10 +202,12 @@ const EditAdBody = ({ data, onSubmit }) => {
             )}
           </Form.Field>
 
-          <Form.Field>
-            <label>Jenis Produk</label>
-            <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} />
-          </Form.Field>
+          {!_.isEmpty(productTypeOptions(formik)) && (
+            <Form.Field>
+              <label>Jenis Produk</label>
+              <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} />
+            </Form.Field>
+          )}
 
           {getProductType(formik.values.category, formik.values.productType) && (
             <Form.Field>
