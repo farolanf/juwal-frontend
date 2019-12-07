@@ -159,8 +159,8 @@ const EditAdBody = ({ data, onSubmit }) => {
   }
 
   const handleCategoryItemClick = (category, formik) => {
-    formik.setFieldValue('productType', '')
     formik.setFieldValue('specFields', [])
+    formik.setFieldValue('productType', '')
     formik.setFieldValue('category', category.id)
   }
 
@@ -236,7 +236,7 @@ const EditAdBody = ({ data, onSubmit }) => {
           {!_.isEmpty(productTypeOptions(formik)) && (
             <Form.Field>
               <label>Jenis Produk</label>
-              <Dropdown search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} noResultsMessage='Tidak ada hasil' />
+              <Dropdown clearable search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} noResultsMessage='Tidak ada hasil' />
             </Form.Field>
           )}
 
@@ -247,7 +247,7 @@ const EditAdBody = ({ data, onSubmit }) => {
                 {getProductType(formik.values.category, formik.values.productType).fields.map(field => (
                   <Form.Field key={field.id} inline className='field-small'>
                     <label className='inline-label'>{field.label}</label>
-                    <Dropdown search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
+                    <Dropdown clearable search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
                   </Form.Field>
                 ))}
               </Segment>
