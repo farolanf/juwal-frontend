@@ -3,6 +3,18 @@
   .ui.menu .dropdown.item .menu.menu {
     min-width: 200px;
   }
+
+  .field-small {
+    
+    label {
+      font-size: .8em !important;
+      font-weight: 100 !important;
+
+      &.inline-label {
+        width: 100px !important;
+      }
+    }
+  }
 }
 
 .category-picker {

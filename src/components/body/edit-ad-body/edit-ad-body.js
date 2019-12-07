@@ -85,9 +85,11 @@ const ImageUploadField = ({ id, name, index, ...props }) => {
 
 const EditAdBody = ({ data, onSubmit }) => {
   const [{ Products: productsCategory, ProductsNormal: productsCategoryNormal }, actions] = useGlobal(state => state.categories)
+  const [{ provinsis, provinsisNormal }] = useGlobal(state => state.city)
 
   useEffect(() => {
     actions.category.getCategory('Products')
+    actions.city.getProvinsis()
   }, [actions])
 
   const getCategory = id => _.get(productsCategoryNormal, ['entities', 'category', id])
@@ -95,6 +97,27 @@ const EditAdBody = ({ data, onSubmit }) => {
   const getProductType = (categoryId, productTypeId) => {
     const category = getCategory(categoryId)
     return category && _.find(category.producttypes, { id: productTypeId })
+  }
+
+  const getProvinsi = id => {
+    if (provinsisNormal && provinsisNormal.entities.provinsi[id]) {
+      return provinsisNormal.entities.provinsi[id]
+    }
+  }
+
+  const getKabupatenOptions = formik => {
+    const provinsi = getProvinsi(formik.values.provinsi)
+    if (provinsi) {
+      return provinsi.kabupatens.map(kabupatenId => {
+        const kabupaten = provinsisNormal.entities.kabupaten[kabupatenId]
+        return {
+          key: kabupaten.id,
+          text: kabupaten.name,
+          value: kabupaten.id
+        }
+      })
+    }
+    return []
   }
 
   const productTypeOptions = formik => {
@@ -135,6 +158,11 @@ const EditAdBody = ({ data, onSubmit }) => {
       }
       return sf
     }))
+  }
+
+  const handleProvinsiChange = formik => (e, opt) => {
+    formik.setFieldValue('kabupaten', '')
+    formik.setFieldValue('provinsi', opt.value)
   }
 
   const renderCategoryMenu = (category, formik) => (
@@ -182,8 +210,8 @@ const EditAdBody = ({ data, onSubmit }) => {
               <label>Spek</label>
               <Segment basic>
                 {getProductType(formik.values.category, formik.values.productType).fields.map(field => (
-                  <Form.Field key={field.id}>
-                    <label>{field.label}</label>
+                  <Form.Field key={field.id} inline className='field-small'>
+                    <label className='inline-label'>{field.label}</label>
                     <Dropdown search selection options={field.options.value.map(value => ({
                       value,
                       text: value
@@ -214,6 +242,21 @@ const EditAdBody = ({ data, onSubmit }) => {
             {formik.touched.images && formik.errors.images && (
               <Label pointing color='red'>{formik.errors.images}</Label>
             )}
+          </Form.Field>
+
+          <Form.Field>
+            <label>Lokasi</label>
+            <Form.Field inline className='field-small'>
+              <label className='inline-label'>Provinsi</label>
+              <Dropdown search selection options={(provinsis || []).map(provinsi => ({
+                text: provinsi.name,
+                value: provinsi.id
+              }))} value={formik.values.provinsi} onChange={handleProvinsiChange(formik)} />
+            </Form.Field>
+            <Form.Field inline className='field-small'>
+              <label className='inline-label'>Kabupaten / Kota</label>
+              <Dropdown search selection options={getKabupatenOptions(formik)} value={formik.values.kabupaten} onChange={(e, opt) => formik.setFieldValue('kabupaten', opt.value)} />
+            </Form.Field>
           </Form.Field>
 
           <Button type='submit' primary disabled={!formik.isValid || formik.isSubmitting}>Simpan</Button>

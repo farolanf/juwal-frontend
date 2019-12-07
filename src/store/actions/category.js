@@ -19,7 +19,8 @@ export const getCategory = (store, rootName) => {
       store.setState({
         categories: {
           ...store.state.categories,
-          [rootName]: null
+          [rootName]: null,
+          [`${rootName}Normal`]: null
         },
         error
       })

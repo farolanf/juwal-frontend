@@ -43,7 +43,9 @@ const NewAdPage = () => {
             title: '',
             description: '',
             price: 0,
-            images: _.times(MAX_AD_IMAGES, _.constant(null))
+            images: _.times(MAX_AD_IMAGES, _.constant(null)),
+            provinsi: '',
+            kabupaten: ''
           }}
         />
       </Segment>
