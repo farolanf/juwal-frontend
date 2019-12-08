@@ -143,19 +143,12 @@ const EditAdBody = ({ data, onSubmit }) => {
 
   const productTypeOptions = formik => {
     const category = getCategory(formik.values.category)
-    const options = category
+    return category
       ? category.producttypes.map(pt => ({
           value: pt.id,
           text: pt.name
         }))
       : []
-    if (options.length) {
-      options.unshift({
-        value: '',
-        text: '--- Pilih produk ---'
-      })      
-    }
-    return options
   }
 
   const handleCategoryItemClick = (category, formik) => {
