@@ -19,8 +19,8 @@ const maxImages = MAX_AD_IMAGES
 
 const adSchema = yup.object().shape({
   category: yup.string().required().label('Kategori'),
-  productType: yup.string().label('Jenis produk'),
-  specFields: yup.array().of(yup.object().shape({
+  producttype: yup.string().label('Jenis produk'),
+  specfields: yup.array().of(yup.object().shape({
     id: yup.string(),
     value: yup.mixed()
   })),
@@ -152,23 +152,23 @@ const EditAdBody = ({ data, onSubmit }) => {
   }
 
   const handleCategoryItemClick = (category, formik) => {
-    formik.setFieldValue('specFields', [])
-    formik.setFieldValue('productType', '')
+    formik.setFieldValue('specfields', [])
+    formik.setFieldValue('producttype', '')
     formik.setFieldValue('category', category.id)
   }
 
   const handleProductTypeChange = formik => (e, opt) => {
-    formik.setFieldValue('specFields', [])
-    formik.setFieldValue('productType', opt.value)
+    formik.setFieldValue('specfields', [])
+    formik.setFieldValue('producttype', opt.value)
   }
 
   const handleSpecFieldChange = (field, formik) => (e, opt) => {
-    let specFields = formik.values.specFields
+    let specFields = formik.values.specfields
     if (_.isEmpty(specFields)) {
-      const productType = getProductType(formik.values.category, formik.values.productType)
+      const productType = getProductType(formik.values.category, formik.values.producttype)
       specFields = productType.fields.map(field => ({ id: field.id, value: '' }))
     }
-    formik.setFieldValue('specFields', specFields.map(sf => {
+    formik.setFieldValue('specfields', specFields.map(sf => {
       if (sf.id === field.id) {
         sf.value = opt.value
       }
@@ -229,18 +229,18 @@ const EditAdBody = ({ data, onSubmit }) => {
           {!_.isEmpty(productTypeOptions(formik)) && (
             <Form.Field>
               <label>Jenis Produk</label>
-              <Dropdown clearable search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.productType} onChange={handleProductTypeChange(formik)} noResultsMessage='Tidak ada hasil' />
+              <Dropdown clearable search selection placeholder='Pilih produk' options={productTypeOptions(formik)} value={formik.values.producttype} onChange={handleProductTypeChange(formik)} noResultsMessage='Tidak ada hasil' />
             </Form.Field>
           )}
 
-          {getProductType(formik.values.category, formik.values.productType) && (
+          {getProductType(formik.values.category, formik.values.producttype) && (
             <Form.Field>
               <label>Spek</label>
               <Segment basic>
-                {getProductType(formik.values.category, formik.values.productType).fields.map(field => (
+                {getProductType(formik.values.category, formik.values.producttype).fields.map(field => (
                   <Form.Field key={field.id} inline className='field-small'>
                     <label className='inline-label'>{field.label}</label>
-                    <Dropdown clearable search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specFields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
+                    <Dropdown clearable search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specfields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
                   </Form.Field>
                 ))}
               </Segment>
