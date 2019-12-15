@@ -144,7 +144,7 @@ const EditAdBody = ({ data, onSubmit }) => {
   const productTypeOptions = formik => {
     const category = getCategory(formik.values.category)
     return category
-      ? category.producttypes.map(pt => ({
+      ? _.sortBy(category.producttypes, o => o.order).map(pt => ({
           value: pt.id,
           text: pt.name
         }))
@@ -166,7 +166,7 @@ const EditAdBody = ({ data, onSubmit }) => {
     let specFields = formik.values.specfields
     if (_.isEmpty(specFields)) {
       const productType = getProductType(formik.values.category, formik.values.producttype)
-      specFields = productType.fields.map(field => ({ fieldId: field.id, value: '' }))
+      specFields = _.sortBy(productType.fields, o => o.order).map(field => ({ fieldId: field.id, value: '' }))
     }
     formik.setFieldValue('specfields', specFields.map(sf => {
       if (sf.fieldId === field.id) {
