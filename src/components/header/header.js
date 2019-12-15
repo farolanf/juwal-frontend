@@ -8,7 +8,7 @@ import config from '~config'
 import useGlobal from '~store'
 import { setToken } from '~libs/auth'
 
-const JWT_SECRET = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzY5MDk5MzhmODc5NzE5MzBlZTg4MCIsImlhdCI6OTU3MzU1NjU0OSwiZXhwIjoxNTc2MTQ4NTQ5fQ.qY8pSPfgNcINyejFaH6yUwzAB6IvGZOLu3KtcdfctTo'
+const JWT_SECRET = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzY5MDk5MzhmODc5NzE5MzBlZTg4MCIsImlhdCI6OTU3MzU1NjU0OSwiZXhwIjoxOTc2MTQ4NTQ5fQ.q_xQQllv0Xr8v80wyIpqXCdTBu_M62Wu5XviawSScGg'
 
 const MenuItem = props => (
   <Match path={props.to || props.href || ''}>
