@@ -190,7 +190,7 @@ const EditAdBody = ({ data, onSubmit }) => {
       <Dropdown key={category.id} item text={category.name}>
         <Dropdown.Menu>
           <Dropdown.Item text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
-          {category.categories.map(child => renderCategoryMenu(child, formik))}
+          {_.sortBy(category.categories, c => c.order).map(child => renderCategoryMenu(child, formik))}
         </Dropdown.Menu>
       </Dropdown>
     ) : (
@@ -217,7 +217,7 @@ const EditAdBody = ({ data, onSubmit }) => {
             <Menu secondary styleName='category-picker'>
               <Dropdown item text={(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}>
                 <Dropdown.Menu>
-                  {productsCategory && productsCategory.categories.map(category => renderCategoryMenu(category, formik))}
+                  {productsCategory && _.sortBy(productsCategory.categories, c => c.order).map(category => renderCategoryMenu(category, formik))}
                 </Dropdown.Menu>
               </Dropdown>
             </Menu>
