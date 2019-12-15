@@ -166,10 +166,10 @@ const EditAdBody = ({ data, onSubmit }) => {
     let specFields = formik.values.specfields
     if (_.isEmpty(specFields)) {
       const productType = getProductType(formik.values.category, formik.values.producttype)
-      specFields = productType.fields.map(field => ({ id: field.id, value: '' }))
+      specFields = productType.fields.map(field => ({ fieldId: field.id, value: '' }))
     }
     formik.setFieldValue('specfields', specFields.map(sf => {
-      if (sf.id === field.id) {
+      if (sf.fieldId === field.id) {
         sf.value = opt.value
       }
       return sf
@@ -240,7 +240,7 @@ const EditAdBody = ({ data, onSubmit }) => {
                 {getProductType(formik.values.category, formik.values.producttype).fields.map(field => (
                   <Form.Field key={field.id} inline className='field-small'>
                     <label className='inline-label'>{field.label}</label>
-                    <Dropdown clearable search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specfields, { id: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
+                    <Dropdown clearable search selection options={getFieldOptions(field)} value={_.get(_.find(formik.values.specfields, { fieldId: field.id }), 'value')} onChange={handleSpecFieldChange(field, formik)}noResultsMessage='Tidak ada hasil' allowAdditions onAddItem={handleAddSpecValue(field)} />
                   </Form.Field>
                 ))}
               </Segment>

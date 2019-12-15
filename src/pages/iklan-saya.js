@@ -64,6 +64,24 @@ const EditPage = ({ id }) => {
   const [product, setProduct] = useState()
   const [, actions] = useGlobal(() => null)
 
+  let data
+  if (product) {
+    data = Object.assign(
+      _.pick(product, ['title', 'description', 'price', 'images']),
+      {
+        category: product.category.id,
+        producttype: _.get(product, 'producttype.id'),
+        specfields: product.fields.map(fv => ({
+          id: fv.id,
+          fieldId: fv.field.id,
+          value: fv.value.value
+        })),
+        provinsi: product.kabupaten.provinsi,
+        kabupaten: product.kabupaten.id
+      }
+    )
+  }
+
   const prepareProduct = product => {
     product.images = _.times(MAX_AD_IMAGES, i => _.get(product.images, i, null))
     product.images.forEach(item => {
@@ -86,10 +104,7 @@ const EditPage = ({ id }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true)
 
-    const data = _.defaults(
-      _.pick(values, ['title', 'description', 'price', 'images']),
-      { images: _.times(MAX_AD_IMAGES, _.constant(null)) }
-    )
+    const data = _.pick(values, ['title', 'description', 'price', 'category', 'producttype', 'specfields', 'kabupaten'])
 
     // create blobs from new or changed image
     const blobs = await blobsFromDataUrls(values.images.map(item => {
@@ -116,9 +131,6 @@ const EditPage = ({ id }) => {
     }).filter(item => item)
     await uploadImage(id, createUploadFormData(removeFileMetas.concat(fileMetas)))
 
-    // images field already hanlded with uploadImage
-    delete data.images
-
     const product = await updateProduct(id, data).then(res => res.data)
 
     setSubmitting(false)
@@ -132,7 +144,7 @@ const EditPage = ({ id }) => {
     <Segment vertical>
       <Header as='h1'>Ubah Iklan</Header>
       <Dimmer.Dimmable blurring dimmed={!product || loading}>
-        {product && <EditAdBody onSubmit={handleSubmit} data={product} />}
+        {data && <EditAdBody onSubmit={handleSubmit} data={data} />}
         <Dimmer inverted active={!product || loading}>
           <Loader />
         </Dimmer>
