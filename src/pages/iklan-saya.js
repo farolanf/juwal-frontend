@@ -104,8 +104,6 @@ const EditPage = ({ id }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     setLoading(true)
 
-    const data = _.pick(values, ['title', 'description', 'price', 'category', 'producttype', 'specfields', 'kabupaten'])
-
     // create blobs from new or changed image
     const blobs = await blobsFromDataUrls(values.images.map(item => {
       if (!item || !item.dataUrl) return null
@@ -130,6 +128,8 @@ const EditPage = ({ id }) => {
       return null
     }).filter(item => item)
     await uploadImage(id, createUploadFormData(removeFileMetas.concat(fileMetas)))
+
+    const data = _.pick(values, ['title', 'description', 'price', 'category', 'producttype', 'specfields', 'kabupaten'])
 
     const product = await updateProduct(id, data).then(res => res.data)
 
