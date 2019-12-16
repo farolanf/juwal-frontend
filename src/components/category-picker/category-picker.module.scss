@@ -1,0 +1,29 @@
+.content {
+  display: flex !important;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  h5 {
+    margin-bottom: 0px !important;
+  }
+
+  & > div {
+    width: 200px;
+    margin-bottom: 15px;
+
+    :global {
+
+      .list {
+        margin-top: 0;
+
+        a.item:hover {
+          opacity: .7 !important;
+        }
+
+        a.item.active {
+          opacity: .5;
+        }
+      }
+    }
+  }
+}

@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import * as yup from 'yup'
 import { Formik, useFormikContext } from 'formik'
 
-import { Segment, Form, Button, Icon, Grid, Image, Label, Menu, Dropdown } from 'semantic-ui-react'
+import { Segment, Form, Button, Icon, Grid, Image, Label, Dropdown } from 'semantic-ui-react'
 import FormInput from '~components/form/form-input'
+import CategoryPicker from '~components/category-picker'
 
 import { MAX_AD_IMAGES } from '~constants'
 import useGlobal from '~store'
@@ -93,6 +94,7 @@ const ImageUploadField = ({ id, name, index, ...props }) => {
 const EditAdBody = ({ data, onSubmit }) => {
   const [{ Products: productsCategory, ProductsNormal: productsCategoryNormal }, actions] = useGlobal(state => state.categories)
   const [{ provinsis, provinsisNormal }] = useGlobal(state => state.city)
+  const [categoryPickerOpen, setCategoryPickerOpen] = useState(false)
 
   useEffect(() => {
     actions.category.getCategory('Products')
@@ -155,6 +157,7 @@ const EditAdBody = ({ data, onSubmit }) => {
     formik.setFieldValue('specfields', [])
     formik.setFieldValue('producttype', '')
     formik.setFieldValue('category', category.id)
+    setCategoryPickerOpen(false)
   }
 
   const handleProductTypeChange = formik => (e, opt) => {
@@ -185,19 +188,6 @@ const EditAdBody = ({ data, onSubmit }) => {
     formik.setFieldValue('provinsi', opt.value)
   }
 
-  const renderCategoryMenu = (category, formik) => (
-    category.categories ? (
-      <Dropdown key={category.id} item text={category.name}>
-        <Dropdown.Menu>
-          <Dropdown.Item text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
-          {_.sortBy(category.categories, c => c.order).map(child => renderCategoryMenu(child, formik))}
-        </Dropdown.Menu>
-      </Dropdown>
-    ) : (
-      <Dropdown.Item key={category.id} text={category.name} active={formik.values.category === category.id} onClick={() => handleCategoryItemClick(category, formik)} />
-    )
-  )
-
   const renderFieldError = (formik, field) => (
     formik.touched[field] && formik.errors[field] && (
       <Label pointing color='red'>{formik.errors[field]}</Label>
@@ -214,13 +204,10 @@ const EditAdBody = ({ data, onSubmit }) => {
         <Form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
           <Form.Field required>
             <label>Kategori</label>
-            <Menu secondary styleName='category-picker'>
-              <Dropdown item text={(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}>
-                <Dropdown.Menu>
-                  {productsCategory && _.sortBy(productsCategory.categories, c => c.order).map(category => renderCategoryMenu(category, formik))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu>
+            <Button basic size='small' type='button' onClick={() => setCategoryPickerOpen(!categoryPickerOpen)}>
+              {(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}
+            </Button>
+            <CategoryPicker open={categoryPickerOpen} onClose={() => setCategoryPickerOpen(false)} categories={productsCategory && productsCategory.categories} selectedId={formik.values.category} onChange={category => handleCategoryItemClick(category, formik)} />
             {formik.errors.category && (
               <Label pointing color='red' styleName='category-help'>{formik.errors.category}</Label>
             )}
