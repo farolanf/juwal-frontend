@@ -103,6 +103,17 @@ const EditAdBody = ({ data, onSubmit }) => {
 
   const getCategory = id => _.get(productsCategoryNormal, ['entities', 'category', id])
 
+  const getCategoryPath = id => {
+    if (productsCategoryNormal) {
+      const category = _.get(productsCategoryNormal, ['entities', 'category', id])
+      const parent = _.get(productsCategoryNormal, ['entities', 'category', category.parent])
+      if (!parent || !parent.parent) {
+        return category.name
+      }
+      return `${parent.name} / ${category.name}`
+    }
+  }
+
   const getProductType = (categoryId, productTypeId) => {
     const category = getCategory(categoryId)
     return category && _.find(category.producttypes, { id: productTypeId })
@@ -205,7 +216,7 @@ const EditAdBody = ({ data, onSubmit }) => {
           <Form.Field required>
             <label>Kategori</label>
             <Button basic size='small' type='button' onClick={() => setCategoryPickerOpen(!categoryPickerOpen)}>
-              {(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}
+              {getCategoryPath(formik.values.category) || 'Pilih kategori'}
             </Button><br />
             <CategoryPicker open={categoryPickerOpen} onClose={() => setCategoryPickerOpen(false)} categories={productsCategory && productsCategory.categories} selectedId={formik.values.category} onChange={category => handleCategoryItemClick(category, formik)} />
             {formik.errors.category && (
