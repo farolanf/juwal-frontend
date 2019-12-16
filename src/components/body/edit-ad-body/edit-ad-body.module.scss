@@ -33,6 +33,14 @@
   }
 }
 
+.images-field.images-field.images-field .image-column.image-column.image-column {
+  padding-bottom: 5px !important;
+
+  &:not(:first-child) {
+    padding-top: 0 !important;
+  }
+}
+
 .image-upload-field {
   margin-bottom: 6px !important;
   

@@ -206,7 +206,7 @@ const EditAdBody = ({ data, onSubmit }) => {
             <label>Kategori</label>
             <Button basic size='small' type='button' onClick={() => setCategoryPickerOpen(!categoryPickerOpen)}>
               {(getCategory(formik.values.category) || {}).name || 'Pilih kategori'}
-            </Button>
+            </Button><br />
             <CategoryPicker open={categoryPickerOpen} onClose={() => setCategoryPickerOpen(false)} categories={productsCategory && productsCategory.categories} selectedId={formik.values.category} onChange={category => handleCategoryItemClick(category, formik)} />
             {formik.errors.category && (
               <Label pointing color='red' styleName='category-help'>{formik.errors.category}</Label>
@@ -240,12 +240,12 @@ const EditAdBody = ({ data, onSubmit }) => {
           
           <FormInput id='price' name='price' label='Harga' type='number' min={priceMin} required />
 
-          <Form.Field>
+          <Form.Field styleName='images-field'>
             <label>Foto</label>
             <Grid centered stackable columns={2}>
               <Grid.Row>
                 {_.times(maxImages).map((val, i) => (
-                  <Grid.Column key={i}>
+                  <Grid.Column key={i} styleName='image-column'>
                     <ImageUploadField id='image-upload' index={i} name='images' />
                   </Grid.Column>
                 ))}
