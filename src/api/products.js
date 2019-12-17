@@ -1,6 +1,8 @@
 import config from '~config'
 import { get, post, put } from '~libs/api'
 
+export const queryProducts = params => get(`${config.apiUrl}/products/search`, params)
+
 export const searchProducts = params => get(`${config.apiUrl}/products`, params)
 
 export const getProduct = id => get(`${config.apiUrl}/products/${id}`)
