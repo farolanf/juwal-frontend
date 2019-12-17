@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import qs from 'qs'
+import { Head } from 'react-static'
 import { navigate, Match } from '@reach/router'
 
-import { Input } from 'semantic-ui-react'
+import { Segment, Header, Input } from 'semantic-ui-react'
 
 import { queryProducts } from '~api/products'
 
@@ -28,15 +29,19 @@ const CariPage = () => {
   }
 
   return (
-    <div>
+    <>
+      <Head title='Cari' />
+      <Segment vertical>
+        <Header as='h1'>Cari</Header>
+        <form onSubmit={handleSubmit}>
+          <Input value={query} onChange={e => setQuery(e.target.value)} />
+        </form>
+        <pre>{JSON.stringify(results, null, 2)}</pre>
+      </Segment>
       <Match path='*'>
         {({ location }) => location.search !== qstr && setQstr(location.search)}
       </Match>
-      <form onSubmit={handleSubmit}>
-        <Input value={query} onChange={e => setQuery(e.target.value)} />
-      </form>
-      <pre>{JSON.stringify(results, null, 2)}</pre>
-    </div>
+    </>
   )
 }
 
