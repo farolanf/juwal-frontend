@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { Head } from 'react-static'
 import { navigate, Match } from '@reach/router'
 
-import { Segment, Header, Input, List, Checkbox, Label, Icon } from 'semantic-ui-react'
+import { Segment, Header, Input, List, Checkbox, Label, Icon, Button } from 'semantic-ui-react'
 import './cari.module.scss'
 
 import { queryProducts } from '~api/products'
@@ -28,10 +28,11 @@ const ActiveFiltersBox = ({ filters, onRemoveFilter }) => (
   ) : null
 )
 
-const FiltersGroup = ({ bucket, onAddFilter }) => {
-  const handleAddFilter = (e, label, value) => {
-    console.log(e.target.checked, label, value)
-    e.target.checked && onAddFilter({ label, value })
+const FiltersGroup = ({ activeFilters, bucket, onChange }) => {
+  const isChecked = (label, value) => !!activeFilters && !!activeFilters.find(a => a.label === label && a.value === value)  
+
+  const handleFilterChange = (e, opt, label, value) => {
+    onChange({ label, value }, opt.checked)
   }
 
   return (
@@ -39,18 +40,18 @@ const FiltersGroup = ({ bucket, onAddFilter }) => {
       <List.Header>{bucket.key} ({bucket.doc_count})</List.Header>
       <List.Content>
         {bucket.values && bucket.values.buckets.map(value => (
-          <Checkbox key={value.key} label={`${value.key} (${value.doc_count})`} onChange={_.curryRight(handleAddFilter)(bucket.key, value.key)} />
+          <Checkbox key={value.key} label={`${value.key} (${value.doc_count})`} checked={isChecked(bucket.key, value.key)} onChange={_.curryRight(handleFilterChange)(bucket.key, value.key)} />
         ))}
       </List.Content>
     </List.Item>
   )
 }
 
-const FiltersBox = ({ results, onAddFilter }) => (
+const FiltersBox = ({ results, activeFilters, onChange }) => (
   <Segment>
     <List horizontal>
       {results && results.aggregations.attrs.attrs.buckets.map(bucket => (
-        <FiltersGroup bucket={bucket} onAddFilter={onAddFilter} />
+        <FiltersGroup key={bucket.key} bucket={bucket} activeFilters={activeFilters} onChange={onChange} />
       ))}
     </List>
   </Segment>
@@ -64,14 +65,17 @@ const CariPage = () => {
 
   useEffect(() => {
     const queryObj = qs.parse(qstr, { ignoreQueryPrefix: true })
-    if (queryObj.q) {
-      setQuery(queryObj.q)
-      ;(async function() {
-        const results = await queryProducts({ q: queryObj.q }).then(res => res.data)
-        setResults(results)
-      }())
-    }
+    queryObj.q && setQuery(queryObj.q)
+    queryObj.attrs && setActiveFilters(JSON.parse(queryObj.attrs))
+    ;(async function() {
+      const results = await queryProducts(queryObj).then(res => res.data)
+      setResults(results)
+    }())
   }, [qstr])
+
+  const updateFiltersParam = filters => {
+    navigate(`cari?q=${query}&attrs=${JSON.stringify(filters)}`)
+  }
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -79,18 +83,19 @@ const CariPage = () => {
   }
 
   const handleAddFilter = attr => {
-    const filters = (activeFilters && activeFilters.slice()) || []
-    filters.push(attr)
-    setActiveFilters(filters)
+    const filters = [...(activeFilters || []), attr]
+    updateFiltersParam(filters)
   }
 
   const handleRemoveFilter = attr => {
     const filters = activeFilters.slice()
-    _.pull(filters, attr)
-    setActiveFilters(filters)    
+    filters.splice(filters.findIndex(a => a.label === attr.label && a.value === attr.value), 1)
+    updateFiltersParam(filters)
   }
 
-  console.log(activeFilters)
+  const handleFilterChange = (attr, active) => {
+    active ? handleAddFilter(attr) : handleRemoveFilter(attr)
+  }
 
   return (
     <>
@@ -98,10 +103,10 @@ const CariPage = () => {
       <Segment vertical>
         <Header as='h1'>Cari</Header>
         <form onSubmit={handleSubmit}>
-          <Input value={query} onChange={e => setQuery(e.target.value)} />
+          <Input value={query} onChange={e => setQuery(e.target.value)} placeholder='Cari...' icon='search' iconPosition='left' />
         </form>
+        <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
         <ActiveFiltersBox filters={activeFilters} onRemoveFilter={handleRemoveFilter} />
-        <FiltersBox results={results} onAddFilter={handleAddFilter} />
         <pre>{JSON.stringify(results, null, 2)}</pre>
       </Segment>
       <Match path='*'>

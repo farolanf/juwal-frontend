@@ -4,7 +4,20 @@
 
 		.item {
 			margin-left: 0 !important;
-			margin-right: 14px; 
+			margin-right: 14px;
+
+			.header {
+				margin-bottom: 8px !important;
+			}
+
+			.content {
+				display: flex;
+				flex-direction: column;
+
+				.checkbox {
+					margin-bottom: 6px;
+				}
+			}
 		}
 	}
 }
