@@ -106,6 +106,7 @@ const EditAdBody = ({ data, onSubmit }) => {
   const getCategoryPath = id => {
     if (productsCategoryNormal) {
       const category = _.get(productsCategoryNormal, ['entities', 'category', id])
+      if (!category) return
       const parent = _.get(productsCategoryNormal, ['entities', 'category', category.parent])
       if (!parent || !parent.parent) {
         return category.name
