@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Head } from 'react-static'
-import { Router } from '@reach/router'
+import { Router, Link } from '@reach/router'
 import _ from 'lodash'
 
 import { Message, Segment, Header, Item, Button, Loader, Dimmer } from 'semantic-ui-react'
@@ -21,9 +21,9 @@ const ProductOverview = ({ item: { id, title, description, price, images } }) =>
       <Item.Image src={imgUrl && `${config.apiUrl}${imgUrl}`} />
       <Item.Content>
         <Item.Header styleName='product-overview__header'>
-          <a href={`/iklan-saya/${id}`}>{title}</a>
-          <Button size='mini' color='blue' floated='right' as='a' href={`/item/${id}`} icon='eye' title='Preview' />
-          <Button size='mini' color='blue' floated='right' as='a' href={`/iklan-saya/${id}`} icon='edit' title='Ubah' />
+          <Link to={`/iklan-saya/${id}`}>{title}</Link>
+          <Button size='mini' color='blue' floated='right' as={Link} to={`/item/${id}`} icon='eye' title='Preview' />
+          <Button size='mini' color='blue' floated='right' as={Link} to={`/iklan-saya/${id}`} icon='edit' title='Ubah' />
         </Item.Header>
         <Item.Description>
           {description}
