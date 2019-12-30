@@ -32,6 +32,12 @@ const ActiveFiltersBox = ({ filters, onRemoveFilter }) => (
 const FiltersGroup = ({ activeFilters, bucket, onChange }) => {
   const isChecked = (label, value) => !!activeFilters && !!activeFilters.find(a => a.label === label && a.value === value)  
 
+  const sortValues = buckets => buckets.sort((a, b) => {
+    return a.key && !b.key
+      ? -1
+      : !a.key && b.key ? 1 : 0
+  })
+
   const handleFilterChange = (e, opt, label, value) => {
     onChange({ label, value }, opt.checked)
   }
@@ -40,7 +46,7 @@ const FiltersGroup = ({ activeFilters, bucket, onChange }) => {
     <List.Item>
       <List.Header>{bucket.key} ({bucket.doc_count})</List.Header>
       <List.Content>
-        {bucket.values && bucket.values.buckets.map(value => (
+        {bucket.values && sortValues(bucket.values.buckets).map(value => (
           <Checkbox key={value.key} label={`${value.key} (${value.doc_count})`} checked={isChecked(bucket.key, value.key)} onChange={_.curryRight(handleFilterChange)(bucket.key, value.key)} />
         ))}
       </List.Content>
