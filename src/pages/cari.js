@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import qs from 'qs'
 import _ from 'lodash'
 import { Head } from 'react-static'
-import { navigate, Match } from '@reach/router'
+import { navigate, Match, Link } from '@reach/router'
 
 import { Grid, Segment, Header, Input, List, Checkbox, Label, Icon, Card, Image, Responsive } from 'semantic-ui-react'
 import './cari.module.scss'
@@ -59,7 +59,7 @@ const FiltersBox = ({ results, activeFilters, onChange }) => (
 )
 
 const ProductOverview = ({ item }) => (
-  <Card styleName='product-overview'>
+  <Card as={Link} to={`/item/${item.id}`} styleName='product-overview'>
     <div className='' styleName='image-container'>
       <Image src={item.images[0]} />
     </div>
