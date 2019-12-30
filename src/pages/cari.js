@@ -4,10 +4,11 @@ import _ from 'lodash'
 import { Head } from 'react-static'
 import { navigate, Match } from '@reach/router'
 
-import { Segment, Header, Input, List, Checkbox, Label, Icon, Button } from 'semantic-ui-react'
+import { Grid, Segment, Header, Input, List, Checkbox, Label, Icon, Card, Image, Responsive } from 'semantic-ui-react'
 import './cari.module.scss'
 
 import { queryProducts } from '~api/products'
+import { formatCurrency } from '~libs/helpers'
 
 const ActiveFiltersBox = ({ filters, onRemoveFilter }) => (
   filters && filters.length > 0 ? (
@@ -57,6 +58,28 @@ const FiltersBox = ({ results, activeFilters, onChange }) => (
   </Segment>
 )
 
+const ProductOverview = ({ item }) => (
+  <Card styleName='product-overview'>
+    <div className='' styleName='image-container'>
+      <Image src={item.images[0]} />
+    </div>
+    <Card.Content>
+      <Card.Header>{formatCurrency(item.price)}</Card.Header>
+      <Card.Description>{item.title}</Card.Description>
+    </Card.Content>
+  </Card>
+)
+
+const SearchResults = ({ results }) => (
+  <Segment styleName='search-results' basic>
+    <Grid stackable>
+      {_.get(results, 'hits.hits', []).map(hit => (
+        <ProductOverview key={hit._id} item={hit._source} />
+      ))}
+    </Grid>
+  </Segment>
+)
+
 const CariPage = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState()
@@ -103,11 +126,28 @@ const CariPage = () => {
       <Segment vertical>
         <Header as='h1'>Cari</Header>
         <form onSubmit={handleSubmit}>
-          <Input value={query} onChange={e => setQuery(e.target.value)} placeholder='Cari...' icon='search' iconPosition='left' />
+          <Input value={query} onChange={e => setQuery(e.target.value)} placeholder='Cari...' icon='search' iconPosition='left' fluid />
         </form>
-        <ActiveFiltersBox filters={activeFilters} onRemoveFilter={handleRemoveFilter} />
-        <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
-        <pre>{JSON.stringify(results, null, 2)}</pre>
+        <Responsive maxWidth={Responsive.onlyTablet.maxWidth}>
+          <Segment vertical>
+            <ActiveFiltersBox filters={activeFilters} onRemoveFilter={handleRemoveFilter} />
+            <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
+            <SearchResults results={results} />
+          </Segment>
+        </Responsive>
+        <Responsive minWidth={Responsive.onlyComputer.minWidth}>
+          <Segment vertical>
+            <Grid>
+              <Grid.Column width={4}>
+                <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
+              </Grid.Column>
+              <Grid.Column width={12}>
+                <ActiveFiltersBox filters={activeFilters} onRemoveFilter={handleRemoveFilter} />
+                <SearchResults results={results} />
+              </Grid.Column>
+            </Grid>
+          </Segment>
+        </Responsive>
       </Segment>
       <Match path='*'>
         {({ location }) => location.search !== qstr && setQstr(location.search)}

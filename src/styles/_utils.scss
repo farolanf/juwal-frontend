@@ -1,0 +1,25 @@
+@import 'vars';
+
+@mixin up-to-mobile {
+  @media (max-width: $mobile-max-width) {
+    @content;
+  }
+}
+
+@mixin up-to-tablet {
+  @media (max-width: $tablet-max-width) {
+    @content;
+  }
+}
+
+@mixin from-tablet {
+  @media (min-width: $tablet-min-width) {
+    @content;
+  }
+}
+
+@mixin from-laptop {
+  @media (min-width: $laptop-min-width) {
+    @content;
+  }
+}
