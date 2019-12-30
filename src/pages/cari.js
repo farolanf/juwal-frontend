@@ -105,8 +105,8 @@ const CariPage = () => {
         <form onSubmit={handleSubmit}>
           <Input value={query} onChange={e => setQuery(e.target.value)} placeholder='Cari...' icon='search' iconPosition='left' />
         </form>
-        <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
         <ActiveFiltersBox filters={activeFilters} onRemoveFilter={handleRemoveFilter} />
+        <FiltersBox results={results} activeFilters={activeFilters} onChange={handleFilterChange} />
         <pre>{JSON.stringify(results, null, 2)}</pre>
       </Segment>
       <Match path='*'>
