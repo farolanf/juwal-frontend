@@ -15,7 +15,7 @@ import { blobsFromDataUrls, location } from '~libs/doms'
 import { MAX_AD_IMAGES } from '~constants'
 
 const ProductOverview = ({ item: { id, title, description, price, images } }) => {
-  const imgUrl = _.get(images, [0, 'url'])
+  const imgUrl = ((images || []).find(img => img && img.url) || {}).url
   return (
     <Item>
       <Item.Image src={imgUrl && `${config.apiUrl}${imgUrl}`} />
