@@ -71,7 +71,14 @@ const ProductOverview = ({ item }) => (
     </div>
     <Card.Content>
       <Card.Header>{formatCurrency(item.price)}</Card.Header>
-      <Card.Description>{item.title}</Card.Description>
+      <Card.Meta>2019</Card.Meta>
+      <Card.Description>{item.title} test long title test long titletest long test long title test long titletest long title test long title test long title test long title</Card.Description>
+    </Card.Content>
+    <Card.Content extra>
+      <footer>
+        <div>Banjarmasin</div>
+        <div>5 Des</div>
+      </footer>
     </Card.Content>
   </Card>
 )

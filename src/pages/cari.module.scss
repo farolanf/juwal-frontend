@@ -60,8 +60,23 @@
 			}
 		}
 
-		:global .content {
-			height: 7rem;
+		:global .content:not(.extra) {
+
+			.description {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+		}
+
+		:global .content.extra {
+
+			footer {
+				display: flex;
+				justify-content: space-between;
+				font-size: smaller;
+				text-transform: uppercase;
+			}
 		}
 	}
 }
